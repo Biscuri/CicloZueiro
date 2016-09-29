@@ -14,9 +14,11 @@ public class CicloHamiltoniano {
 	private static String MENSAGEM_ERRO = "Este grafo não possui circuito";
 	private List<Vertice> vertices;
 	private Vertice inicial;
+	private List<List<Aresta>> caminhos;
 	
 	public CicloHamiltoniano (){
-		vertices = new ArrayList<Vertice>();		
+		vertices = new ArrayList<Vertice>();
+		caminhos = new ArrayList<List<Aresta>>();
 	}
 	
 	public void iniciar(){
@@ -89,7 +91,7 @@ public class CicloHamiltoniano {
 		}
 		//se não possui mais iterações verifica
 		else if(origem.getVizinhos().contains(inicial)){
-			caminho.add(origem.getCaminho(inicial));
+			caminho.add(origem.getCaminho(inicial, caminho));
 			System.out.println("Possui ciclo: " + caminho);
 			return caminho;
 		}

@@ -44,11 +44,11 @@ public class Vertice {
 		return false;
 	}
 	
-	public Aresta getCaminho(Vertice destino){
+	public Aresta getCaminho(Vertice destino, List<Aresta> caminho){
 		int controle = Integer.MAX_VALUE;
 		Aresta aux = null;
 		for(Aresta a : arestas){
-			if(a.getPeso() < controle){
+			if(a.getPeso() < controle && !caminho.contains(a) && (a.getDestino().equals(destino) || a.getOrigem().equals(destino))){
 				controle = a.getPeso();
 				aux = a;
 			}

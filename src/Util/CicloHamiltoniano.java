@@ -51,52 +51,57 @@ public class CicloHamiltoniano {
 		new Aresta(v1, v2, peso);	
 	}
 	
+	/*
+	 * Ordem do algoritmo:
+	 * O(V!)
+	 */
+	
 	public List<Aresta> iniciarAnalise(Vertice origem, List<Vertice> visitados, List<Aresta> caminho){
 		if(origem.getQtdArestas() <= 1){
 			System.out.println(MENSAGEM_ERRO);
 			return null;
 		}
-		//marco o vertice como visitado
-		if(!visitados.contains(origem))
+		if(!visitados.contains(origem)) //Só verifica vértices não visitados, número de vértices diminui a cada recursão
 			visitados.add(origem);
-		//se já foi visitado nem faz nada
 		else 
 			return null;
 		
-		//variaveis de controle
 		int controle = Integer.MAX_VALUE, anteriorControle;
 		List<Aresta> auxCaminho;
-		//verificando se ainda possui iterações por fazer
-		if(visitados.size() < vertices.size()){
-			//verificando cada aresta
-			for(Aresta a : origem.getArestas()){
-				//verifico se o peso é menor e se o destino não já foi visitado
+		if(visitados.size() < vertices.size()){ 
+			/*
+			 * O número de arestas analisadas diminui a cada recursão pois arestas ligando a vértices visitados não são analisadas.
+			 */
+			for(Aresta a : origem.getArestas()){ 
 				if(a.getPeso() < controle && !visitados.contains(a.getDestino(origem))){
 					caminho.add(a);
 					anteriorControle = controle;
 					controle = a.getPeso();
 					System.out.println(caminho);
+					/*
+					 * Recursão:
+					 * Chama para cada vértice não-visitado até este ponto,
+					 * e a cada recursão analisa todas as arestas ligando a 
+					 * vértices ainda não visitados. Para cada análise de aresta,
+					 * chama novamente para os vértices não visitados, ou seja:
+					 * V . V-1 . V-2 ... 1
+					 * Logo o código roda V! vezes.
+					 */
 					auxCaminho = iniciarAnalise(a.getDestino(origem), visitados, caminho);
-					//retornando o caminho que foi encontrado se tudo ocorreu bem
 					if(auxCaminho != null)
 						return auxCaminho;
-					//se não encontrou caminho valido reseta
 					else {
-						//resetando o ultimo estado
 						controle = anteriorControle;
 						caminho.remove(a);
 					}
 				}
 			}
-		}
-		//se não possui mais iterações verifica
-		else if(origem.getVizinhos().contains(inicial)){
+		} else if(origem.getVizinhos().contains(inicial)){
 			caminho.add(origem.getCaminho(inicial, caminho));
 			System.out.println("Possui ciclo: " + caminho);
 			return caminho;
 		}
 		
-		//se não encontrou o caminho até aqui, remove dos visitados e retorna null
 		System.out.println("Não Possui ciclo por aqui " + caminho);
 		visitados.remove(origem);
 		return null;
